@@ -27,7 +27,7 @@ class RPi4:
         self.gpio_control = GPIOControl(pinup, pindown, pinleft, pinright)
 
 # Initialize RPi4 instance
-Rpi = RPi4(21, 19, 13, 26)
+Rpi = RPi4(19, 20, 21, 16)
 
 # Request handlers
 def captureKeyEvent(request):
