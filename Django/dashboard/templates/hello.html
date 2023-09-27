@@ -7,6 +7,13 @@
         <h1>Hello World</h1>
         {% endif %}
         
+        <!-- Add a form with a CSRF token and a hidden input field -->
+        <form method="post">
+            {% csrf_token %}
+            <!-- Add other form fields here if needed -->
+            <input type="submit" value="Submit">
+        </form>
+        
         <!-- Add a div to display currently pressed keys -->
         <div id="pressedKeys"></div>
     </body>
