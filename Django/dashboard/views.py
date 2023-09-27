@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 import RPi.GPIO as GPIO
 
 # Create a class for GPIO control
-class RPi4(GPIO):
+class GPIOControl:
     def __init__(self, pinup, pindown, pinleft, pinright):
         self.uppin = pinup
         self.downpin = pindown
@@ -11,17 +11,22 @@ class RPi4(GPIO):
         self.rightpin = pinright
 
         # Set GPIO pin numbering mode
-        self.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BCM)
 
         # Setup GPIO pins as output
-        self.setup(self.uppin, GPIO.OUT)
-        self.setup(self.downpin, GPIO.OUT)
-        self.setup(self.leftpin, GPIO.OUT)
-        self.setup(self.rightpin, GPIO.OUT)
+        GPIO.setup(self.uppin, GPIO.OUT)
+        GPIO.setup(self.downpin, GPIO.OUT)
+        GPIO.setup(self.leftpin, GPIO.OUT)
+        GPIO.setup(self.rightpin, GPIO.OUT)
 
     def set_pin_state(self, pin, state):
-        self.output(pin, state)
+        GPIO.output(pin, state)
 
+class RPi4:
+    def __init__(self, pinup, pindown, pinleft, pinright):
+        self.gpio_control = GPIOControl(pinup, pindown, pinleft, pinright)
+
+# Initialize RPi4 instance
 Rpi = RPi4(21, 19, 13, 26)
 
 # Request handlers
@@ -36,22 +41,22 @@ def captureKeyEvent(request):
         # Check the key and control the GPIO pin accordingly for both keydown and keyup events
         if event == "keydown":
             if key == 'w' or key == 'ArrowUp':
-                Rpi.set_pin_state(Rpi.uppin, GPIO.HIGH)  # Turn on the GPIO pin
+                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.HIGH)  # Turn on the GPIO pin
             elif key == 's' or key == 'ArrowDown':
-                Rpi.set_pin_state(Rpi.downpin, GPIO.HIGH)
+                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.downpin, GPIO.HIGH)
             elif key == 'a' or key == 'ArrowLeft':
-                Rpi.set_pin_state(Rpi.leftpin, GPIO.HIGH)
+                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.leftpin, GPIO.HIGH)
             elif key == 'd' or key == 'ArrowRight':
-                Rpi.set_pin_state(Rpi.rightpin, GPIO.HIGH)
+                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.rightpin, GPIO.HIGH)
         elif event == "keyup":
             if key == 'w' or key == 'ArrowUp':
-                Rpi.set_pin_state(Rpi.uppin, GPIO.LOW)  # Turn off the GPIO pin
+                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.LOW)  # Turn off the GPIO pin
             elif key == 's' or key == 'ArrowDown':
-                Rpi.set_pin_state(Rpi.downpin, GPIO.LOW)
+                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.downpin, GPIO.LOW)
             elif key == 'a' or key == 'ArrowLeft':
-                Rpi.set_pin_state(Rpi.leftpin, GPIO.LOW)
+                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.leftpin, GPIO.LOW)
             elif key == 'd' or key == 'ArrowRight':
-                Rpi.set_pin_state(Rpi.rightpin, GPIO.LOW)
+                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.rightpin, GPIO.LOW)
 
         return JsonResponse({'message': 'Key event captured',
                              'key': key,
