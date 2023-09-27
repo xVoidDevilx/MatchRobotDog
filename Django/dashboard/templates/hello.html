@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        {% if name %}
+        <h1>Hello {{ name }}</h1>
+        {% else %}
+        <h1>Hello World</h1>
+        {% endif %}
+        
+        <!-- Add a div to display currently pressed keys -->
+        <div id="pressedKeys"></div>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let keysPressed = {};
+            let csrftoken = getCookie('csrftoken'); // Function to get the CSRF token from the cookie
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    let cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        let cookie = $.trim(cookies[i]);
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Define an array of key codes for the keys you want to capture
+            const allowedKeys = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+
+            $(document).keydown(function (e) {
+                // Check if the pressed key is in the allowedKeys array
+                if (allowedKeys.includes(e.key)) {
+                    // Record key press event
+                    keysPressed[e.key] = true;
+
+                    // Log the pressed key to the console
+                    console.log('Key Pressed:', e.key);
+
+                    // Update the displayed keys
+                    updatePressedKeys();
+                    
+                    // Send data to the server with the CSRF token in the headers
+                    $.ajax({
+                        type: 'POST',
+                        url: '/dashboard/hello/', // Update the URL as needed
+                        data: {
+                            key: e.key,
+                            event: 'keydown',
+                        },
+                        beforeSend: function(xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        },
+                        success: function (data) {
+                            // Handle the success response
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle the error response
+                        },
+                    });
+                }
+            });
+
+            $(document).keyup(function (e) {
+                // Check if the released key is in the allowedKeys array
+                if (allowedKeys.includes(e.key)) {
+                    // Record key release event
+                    keysPressed[e.key] = false;
+
+                    // Log the released key to the console
+                    console.log('Key Released:', e.key);
+
+                    // Update the displayed keys
+                    updatePressedKeys();
+                    
+                    // Send data to the server with the CSRF token in the headers
+                    $.ajax({
+                        type: 'POST',
+                        url: '/dashboard/hello/', // Update the URL as needed
+                        data: {
+                            key: e.key,
+                            event: 'keyup',
+                        },
+                        beforeSend: function(xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        },
+                        success: function (data) {
+                            // Handle the success response
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle the error response
+                        },
+                    });
+                }
+            });
+
+            // Function to update the displayed keys
+            function updatePressedKeys() {
+                let pressedKeysDiv = $('#pressedKeys');
+                pressedKeysDiv.empty();
+                let pressedKeysArray = Object.keys(keysPressed).filter(function(key) {
+                    return keysPressed[key];
+                });
+                pressedKeysDiv.text('Currently Pressed Keys: ' + pressedKeysArray.join(', '));
+            }
+        });
+    </script>
+</html>
