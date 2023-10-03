@@ -42,6 +42,19 @@
             // Define an array of key codes for the keys you want to capture
             const allowedKeys = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
+            // Define a function to update the displayed keys
+            function updatePressedKeys() {
+                let pressedKeysDiv = $('#pressedKeys');
+                pressedKeysDiv.empty();
+
+                // Iterate through the keysPressed object and display pressed keys
+                for (let key in keysPressed) {
+                    if (keysPressed[key]) {
+                        pressedKeysDiv.append('<p>Key Pressed: ' + key + '</p>');
+                    }
+                }
+            }
+
             $(document).keydown(function (e) {
                 // Check if the pressed key is in the allowedKeys array
                 if (allowedKeys.includes(e.key)) {
