@@ -48,31 +48,8 @@ print(f"Arrows: {arrows}\nColors: {colors}")
 # Request handlers
 def captureKeyEvent(request):
     
-    # Check the Accept header to determine the response format
-    if 'application/json' in request.META.get('HTTP_ACCEPT', ''):
-        # This is a JSON request, return JSON data
-        sense = SenseHat()
-        temperature = sense.get_temperature()
-        humidity = sense.get_humidity()
-        pressure = sense.get_pressure()
-        
-        accelerometer = sense.get_accelerometer_raw()
-        gyroscope = sense.get_gyroscope_raw()
-        magnetometer = sense.get_compass_raw()
-        
-        # Create a dictionary to store all sensor data
-        sensor_data = {
-            'temperature': temperature,
-            'humidity': humidity,
-            'pressure': pressure,
-            'accelerometer': accelerometer,
-            'gyroscope': gyroscope,
-            'magnetometer': magnetometer,
-        }
-        
-        return JsonResponse(sensor_data)
-    else:
-        # This is an HTML request, render the HTML template
+    if request.method == 'GET':
+        JSON_data = get_sensor_data(request)
         return render(request, 'hello.html', {'name': 'Silas'})
     
     if request.method == 'POST':
