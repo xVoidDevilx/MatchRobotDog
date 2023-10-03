@@ -16,6 +16,8 @@ GPIO 13: Fan on Sensehat
 # init a sense hat object for our robot control HMI
 sense = SenseHat()
 
+print(f"Arrows: {arrows}\nColors: {colors}")
+
 # Create a class for GPIO control
 # class GPIOControl:
 #     def __init__(self, pinup, pindown, pinleft, pinright):
