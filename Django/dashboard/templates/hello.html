@@ -7,6 +7,8 @@
         <h1>Hello World</h1>
         {% endif %}
         
+        <div id="sense-hat-data"></div>
+
         <!-- Add a form with a CSRF token and a hidden input field -->
         <form method="post">
             {% csrf_token %}
@@ -106,15 +108,53 @@
                 }
             });
 
-            // Function to update the displayed keys
-            function updatePressedKeys() {
-                let pressedKeysDiv = $('#pressedKeys');
-                pressedKeysDiv.empty();
-                let pressedKeysArray = Object.keys(keysPressed).filter(function(key) {
-                    return keysPressed[key];
+            // Function to fetch and display sensor data
+            function fetchSensorData() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/dashboard/get_sensor_data/',  // Update the URL as needed
+                    dataType: 'json',
+                    success: function (data) {
+                        // Update the sensorData div with the fetched data
+                        let sensorDataDiv = $('#sensorData');
+                        sensorDataDiv.empty();
+                        
+                        // Display all sensor readings
+                        sensorDataDiv.append('<p>Temperature: ' + data.temperature.toFixed(2) + '°C</p>');
+                        sensorDataDiv.append('<p>Humidity: ' + data.humidity.toFixed(2) + '%</p>');
+                        sensorDataDiv.append('<p>Pressure: ' + data.pressure.toFixed(2) + 'hPa</p>');
+                        
+                        // Display accelerometer readings
+                        sensorDataDiv.append('<p>Accelerometer X: ' + data.accelerometer.x.toFixed(2) + '</p>');
+                        sensorDataDiv.append('<p>Accelerometer Y: ' + data.accelerometer.y.toFixed(2) + '</p>');
+                        sensorDataDiv.append('<p>Accelerometer Z: ' + data.accelerometer.z.toFixed(2) + '</p>');
+                        
+                        // Display gyroscope readings
+                        sensorDataDiv.append('<p>Gyroscope X: ' + data.gyroscope.x.toFixed(2) + '</p>');
+                        sensorDataDiv.append('<p>Gyroscope Y: ' + data.gyroscope.y.toFixed(2) + '</p>');
+                        sensorDataDiv.append('<p>Gyroscope Z: ' + data.gyroscope.z.toFixed(2) + '</p>');
+                        
+                        // Display magnetometer readings
+                        sensorDataDiv.append('<p>Magnetometer X: ' + data.magnetometer.x.toFixed(2) + '</p>');
+                        sensorDataDiv.append('<p>Magnetometer Y: ' + data.magnetometer.y.toFixed(2) + '</p>');
+                        sensorDataDiv.append('<p>Magnetometer Z: ' + data.magnetometer.z.toFixed(2) + '</p>');
+
+                        // You can add other sensor data here as needed
+                        
+                        // Schedule the next fetch in 5 seconds
+                        setTimeout(fetchSensorData, 5000);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching sensor data:', error);
+                        
+                        // Schedule the next fetch in 5 seconds even if there was an error
+                        setTimeout(fetchSensorData, 5000);
+                    },
                 });
-                pressedKeysDiv.text('Currently Pressed Keys: ' + pressedKeysArray.join(', '));
             }
+
+            // Start the periodic sensor data fetching
+            fetchSensorData();
         });
     </script>
 </html>
