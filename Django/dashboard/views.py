@@ -51,7 +51,7 @@ def captureKeyEvent(request):
     
     if request.method == 'GET':
         # Check if it's an AJAX request
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             # Handle the AJAX request for sensor data
             temperature = sense.get_temperature()
             humidity = sense.get_humidity()
