@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 import RPi.GPIO as GPIO
 from sense_hat import SenseHat
-from arrows import colors, arrows
+from .arrows import colors, arrows
 """
 GPIO 2 & 3 : Sensehat SDA SCL
 GPIO 4: GPCLK0 - Sensehat LED Matrix
