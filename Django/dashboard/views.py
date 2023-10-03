@@ -17,31 +17,31 @@ GPIO 13: Fan on Sensehat
 sense = SenseHat()
 
 # Create a class for GPIO control
-class GPIOControl:
-    def __init__(self, pinup, pindown, pinleft, pinright):
-        self.uppin = pinup
-        self.downpin = pindown
-        self.leftpin = pinleft
-        self.rightpin = pinright
+# class GPIOControl:
+#     def __init__(self, pinup, pindown, pinleft, pinright):
+#         self.uppin = pinup
+#         self.downpin = pindown
+#         self.leftpin = pinleft
+#         self.rightpin = pinright
 
-        # Set GPIO pin numbering mode
-        GPIO.setmode(GPIO.BCM)
+#         # Set GPIO pin numbering mode
+#         GPIO.setmode(GPIO.BCM)
 
-        # Setup GPIO pins as output
-        GPIO.setup(self.uppin, GPIO.OUT)
-        GPIO.setup(self.downpin, GPIO.OUT)
-        GPIO.setup(self.leftpin, GPIO.OUT)
-        GPIO.setup(self.rightpin, GPIO.OUT)
+#         # Setup GPIO pins as output
+#         GPIO.setup(self.uppin, GPIO.OUT)
+#         GPIO.setup(self.downpin, GPIO.OUT)
+#         GPIO.setup(self.leftpin, GPIO.OUT)
+#         GPIO.setup(self.rightpin, GPIO.OUT)
 
-    def set_pin_state(self, pin, state):
-        GPIO.output(pin, state)
+#     def set_pin_state(self, pin, state):
+#         GPIO.output(pin, state)
 
-class RPi4:
-    def __init__(self, pinup, pindown, pinleft, pinright):
-        self.gpio_control = GPIOControl(pinup, pindown, pinleft, pinright)
+# class RPi4:
+#     def __init__(self, pinup, pindown, pinleft, pinright):
+#         self.gpio_control = GPIOControl(pinup, pindown, pinleft, pinright)
 
-# Initialize RPi4 instance
-Rpi = RPi4(19, 20, 21, 16)
+# # Initialize RPi4 instance
+# Rpi = RPi4(19, 20, 21, 16)
 
 # Request handlers
 def captureKeyEvent(request):
@@ -59,31 +59,35 @@ def captureKeyEvent(request):
             if key == 'w' or key == 'ArrowUp':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['up']]
                 sense.set_pixels(pixels)
-                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.HIGH)  # Turn on the GPIO pin
+                #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.HIGH)  # Turn on the GPIO pin
             elif key == 's' or key == 'ArrowDown':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['down']]
                 sense.set_pixels(pixels)
-                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.downpin, GPIO.HIGH)
+                #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.downpin, GPIO.HIGH)
             elif key == 'a' or key == 'ArrowLeft':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['left']]
                 sense.set_pixels(pixels)
-                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.leftpin, GPIO.HIGH)
+                #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.leftpin, GPIO.HIGH)
             elif key == 'd' or key == 'ArrowRight':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['right']]
                 sense.set_pixels(pixels)
-                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.rightpin, GPIO.HIGH)
+                #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.rightpin, GPIO.HIGH)
         
         #key release event
         elif event == "keyup":
             sense.clear()   #clear the sensehat matrix
             if key == 'w' or key == 'ArrowUp':
-                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.LOW)  # Turn off the GPIO pin
+                pass
+                #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.LOW)  # Turn off the GPIO pin
             elif key == 's' or key == 'ArrowDown':
-                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.downpin, GPIO.LOW)
+                pass
+                ##Rpi.gpio_control.set_pin_state(Rpi.gpio_control.downpin, GPIO.LOW)
             elif key == 'a' or key == 'ArrowLeft':
-                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.leftpin, GPIO.LOW)
+                pass
+                #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.leftpin, GPIO.LOW)
             elif key == 'd' or key == 'ArrowRight':
-                Rpi.gpio_control.set_pin_state(Rpi.gpio_control.rightpin, GPIO.LOW)
+                pass
+                #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.rightpin, GPIO.LOW)
 
         return JsonResponse({'message': 'Key event captured',
                              'key': key,
