@@ -14,6 +14,7 @@ GPIO 13: Fan on Sensehat
 """
 
 # init a sense hat object for our robot control HMI
+global sense
 sense = SenseHat()
 
 print(f"Arrows: {arrows}\nColors: {colors}")
@@ -98,9 +99,7 @@ def captureKeyEvent(request):
 
     return JsonResponse({'error': 'Invalid Key'}, status=400)
 
-
 def get_sensor_data(request):
-    sense = SenseHat()
     
     temperature = sense.get_temperature()
     humidity = sense.get_humidity()
