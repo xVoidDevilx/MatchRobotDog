@@ -17,6 +17,8 @@ GPIO 13: Fan on Sensehat
 global sense
 sense = SenseHat()
 
+global holding
+
 # For the servos
 import time
 from adafruit_servokit import ServoKit
@@ -91,10 +93,12 @@ def captureKeyEvent(request):
 
         # Check the key and control the GPIO pin accordingly for both keydown and keyup events
         if event == "keydown":
+            holding = True
             if key == 'w' or key == 'ArrowUp':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['up']]
                 sense.set_pixels(pixels)
-                pcaScenario()
+                if holding:
+                    pcaScenario()
                 #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.HIGH)  # Turn on the GPIO pin
             elif key == 's' or key == 'ArrowDown':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['down']]
@@ -112,6 +116,7 @@ def captureKeyEvent(request):
         #key release event
         elif event == "keyup":
             sense.clear()   #clear the sensehat matrix
+            holding = False
             if key == 'w' or key == 'ArrowUp':
                 pcaClear()
                 #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.LOW)  # Turn off the GPIO pin
