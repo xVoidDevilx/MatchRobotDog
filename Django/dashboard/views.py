@@ -3,6 +3,12 @@ from adafruit_servokit import ServoKit
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .arrows import colors, arrows
+import board
+import busio
+import adafruit_pca9685
+i2c = busio.I2C(board.SCL, board.SDA)
+pca = adafruit_pca9685.PCA9685(i2c)
+
 from adafruit_servokit import ServoKit
 kit = ServoKit(channels=16)
 pca.frequency = 50
