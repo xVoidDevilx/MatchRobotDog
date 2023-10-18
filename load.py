@@ -48,7 +48,7 @@ try:
         print(f"Pressure: {pressure:.2f}hPa")
         print(f"Gyroscope Data: Pitch={gyro['pitch']:.2f} Roll={gyro['roll']:.2f} Yaw={gyro['yaw']:.2f}")
         print(f"Accelerometer Data: Pitch={accel['pitch']:.2f} Roll={accel['roll']:.2f} Yaw={accel['yaw']:.2f}")
-        print(f"Magnetometer Data: X={mag['x']:.2f} Y={mag['y']:.2f} Z={mag['z']:.2f}")
+        print(f"Magnetometer Data: {mag:.2f}")
 
         # Simulate a CPU-intensive task
         cpu_intensive_task()
