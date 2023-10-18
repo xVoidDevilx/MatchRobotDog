@@ -3,12 +3,13 @@ from adafruit_servokit import ServoKit    #https://circuitpython.readthedocs.io/
 #Constants
 nbPCAServo=16 
 #Parameters
-MIN_IMP  =[500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500]
-MAX_IMP  =[2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500]
-MIN_ANG  =[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-MAX_ANG  =[180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180, 180]
+MIN_IMP  =[500 if (i+1)%4!=0 else 0 for i in range(nbPCAServo)]
+MAX_IMP  =[2500 if (i+1)%4!=0 else 0 for i in range(nbPCAServo)]
+MIN_ANG  =[0 for i in range(nbPCAServo)]
+MAX_ANG  =[180 for i in range(nbPCAServo)]
 #Objects
 pca = ServoKit(channels=16)
+
 # function init 
 def init():
     for i in range(nbPCAServo):
@@ -16,6 +17,7 @@ def init():
 # function main 
 def main():
     pcaScenario();
+
 # function pcaScenario 
 def pcaScenario():
     """Scenario to test servo"""
