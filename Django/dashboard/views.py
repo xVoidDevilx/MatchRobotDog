@@ -3,6 +3,12 @@ from adafruit_servokit import ServoKit
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .arrows import colors, arrows
+from adafruit_servokit import ServoKit
+kit = ServoKit(channels=16)
+pca.frequency = 50
+import adafruit_motor.servo
+servo = adafruit_motor.servo.Servo(servo_channel)
+
 
 """
 GPIO 2 & 3 : Sensehat SDA SCL
@@ -25,33 +31,6 @@ kit.servo[1].set_pulse_width_range(500, 2500)  # Servo 1
 # init a sense hat object for our robot control HMI
 global sense
 sense = SenseHat()
-
-# Create a class for GPIO control
-# class GPIOControl:
-#     def __init__(self, pinup, pindown, pinleft, pinright):
-#         self.uppin = pinup
-#         self.downpin = pindown
-#         self.leftpin = pinleft
-#         self.rightpin = pinright
-
-#         # Set GPIO pin numbering mode
-#         GPIO.setmode(GPIO.BCM)
-
-#         # Setup GPIO pins as output
-#         GPIO.setup(self.uppin, GPIO.OUT)
-#         GPIO.setup(self.downpin, GPIO.OUT)
-#         GPIO.setup(self.leftpin, GPIO.OUT)
-#         GPIO.setup(self.rightpin, GPIO.OUT)
-
-#     def set_pin_state(self, pin, state):
-#         GPIO.output(pin, state)
-
-# class RPi4:
-#     def __init__(self, pinup, pindown, pinleft, pinright):
-#         self.gpio_control = GPIOControl(pinup, pindown, pinleft, pinright)
-
-# # Initialize RPi4 instance
-# Rpi = RPi4(19, 20, 21, 16)
 
 # Request handlers
 def captureKeyEvent(request):
