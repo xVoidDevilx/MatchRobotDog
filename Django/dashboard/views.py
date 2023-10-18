@@ -3,18 +3,6 @@ from adafruit_servokit import ServoKit
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .arrows import colors, arrows
-import board
-import busio
-import adafruit_pca9685
-i2c = busio.I2C(board.SCL, board.SDA)
-pca = adafruit_pca9685.PCA9685(i2c)
-
-from adafruit_servokit import ServoKit
-kit = ServoKit(channels=16)
-pca.frequency = 50
-import adafruit_motor.servo
-servo = adafruit_motor.servo.Servo(servo_channel)
-
 
 """
 GPIO 2 & 3 : Sensehat SDA SCL
@@ -77,8 +65,7 @@ def captureKeyEvent(request):
             if key == 'w' or key == 'ArrowUp':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['up']]
                 sense.set_pixels(pixels)
-                kit.servo[0].angle = 90
-                kit.servo[1].angle = 0
+                
             elif key == 's' or key == 'ArrowDown':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['down']]
                 sense.set_pixels(pixels)
@@ -93,8 +80,7 @@ def captureKeyEvent(request):
         elif event == "keyup":
             sense.clear()   #clear the sensehat matrix
             if key == 'w' or key == 'ArrowUp':
-                kit.servo[0].angle = 0
-                kit.servo[1].angle = 90
+                pass
             elif key == 's' or key == 'ArrowDown':
                 pass
             elif key == 'a' or key == 'ArrowLeft':
