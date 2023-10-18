@@ -70,7 +70,7 @@
                     // Send data to the server with the CSRF token in the headers
                     $.ajax({
                         type: 'POST',
-                        url: '/dashboard/hello/', // Update the URL as needed
+                        url: '/dashboard/', // Update the URL as needed
                         data: {
                             key: e.key,
                             event: 'keydown',
@@ -103,7 +103,7 @@
                     // Send data to the server with the CSRF token in the headers
                     $.ajax({
                         type: 'POST',
-                        url: '/dashboard/hello/', // Update the URL as needed
+                        url: '/dashboard/', // Update the URL as needed
                         data: {
                             key: e.key,
                             event: 'keyup',
@@ -125,7 +125,7 @@
             function fetchSensorData() {
                 $.ajax({
                     type: 'GET',
-                    url: '/dashboard/hello/',  // Update the URL as needed
+                    url: '/dashboard/',  // Update the URL as needed
                     dataType: 'json',
                     success: function (data) {
                         // Update the sensorData div with the fetched data
