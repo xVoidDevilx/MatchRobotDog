@@ -57,12 +57,10 @@
 
             $(document).keydown(function (e) {
                 // Check if the pressed key is in the allowedKeys array
-                if (e.repeat)
-                    console.log(e.key + " Being held")
-                if (allowedKeys.includes(e.key) && !e.repeat) {
+                if (allowedKeys.includes(e.key)) {
                     // Record key press event
                     keysPressed[e.key] = true;
-                    
+
                     // Log the pressed key to the console
                     console.log('Key Pressed:', e.key);
 
@@ -173,3 +171,4 @@
         });
     </script>
 </html>
+
