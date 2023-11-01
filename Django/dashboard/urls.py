@@ -3,5 +3,5 @@ from . import views
 
 #urlConfiguration module
 urlpatterns = [
-    path('hello/', views.captureKeyEvent)
+    path('', views.captureKeyEvent)
 ]

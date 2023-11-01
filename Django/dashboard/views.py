@@ -17,34 +17,43 @@ GPIO 13: Fan on Sensehat
 global sense
 sense = SenseHat()
 
-print(f"Arrows: {arrows}\nColors: {colors}")
+# For the servos
+import time
+from adafruit_servokit import ServoKit
 
-# Create a class for GPIO control
-# class GPIOControl:
-#     def __init__(self, pinup, pindown, pinleft, pinright):
-#         self.uppin = pinup
-#         self.downpin = pindown
-#         self.leftpin = pinleft
-#         self.rightpin = pinright
+#Constants
+nbPCAServo=16 
 
-#         # Set GPIO pin numbering mode
-#         GPIO.setmode(GPIO.BCM)
+#Parameters
+MIN_IMP  =[500 if (i+1)%4!=0 else 0 for i in range(nbPCAServo)]
+MAX_IMP  =[2500 if (i+1)%4!=0 else 0 for i in range(nbPCAServo)]
+MIN_ANG  =[0 for i in range(nbPCAServo)]
+MAX_ANG  =[90 for i in range(nbPCAServo)]
 
-#         # Setup GPIO pins as output
-#         GPIO.setup(self.uppin, GPIO.OUT)
-#         GPIO.setup(self.downpin, GPIO.OUT)
-#         GPIO.setup(self.leftpin, GPIO.OUT)
-#         GPIO.setup(self.rightpin, GPIO.OUT)
+#Objects
+pca = ServoKit(channels=16)
 
-#     def set_pin_state(self, pin, state):
-#         GPIO.output(pin, state)
+# function init 
+def init():
+    for i in range(nbPCAServo):
+        pca.servo[i].set_pulse_width_range(MIN_IMP[i] , MAX_IMP[i])
+init()
 
-# class RPi4:
-#     def __init__(self, pinup, pindown, pinleft, pinright):
-#         self.gpio_control = GPIOControl(pinup, pindown, pinleft, pinright)
+# function pcaScenario 
+def pcaScenario():
+    """Scenario to test servo"""
+    for i in range(nbPCAServo):
+        for j in range(MIN_ANG[i],MAX_ANG[i],1):
+            pca.servo[i].angle = j
+            time.sleep(0.01)
+        pca.servo[i].angle=None #disable channel
+        time.sleep(0.5)
 
-# # Initialize RPi4 instance
-# Rpi = RPi4(19, 20, 21, 16)
+def pcaClear():
+    for i in range(nbPCAServo):
+        pca.servo[i].angle=None #disable channel
+        time.sleep(0.5)
+
 
 # Request handlers
 def captureKeyEvent(request):
@@ -85,6 +94,7 @@ def captureKeyEvent(request):
             if key == 'w' or key == 'ArrowUp':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['up']]
                 sense.set_pixels(pixels)
+                pcaScenario()
                 #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.HIGH)  # Turn on the GPIO pin
             elif key == 's' or key == 'ArrowDown':
                 pixels = [colors['red'] if pixel == 1 else colors['white'] for pixel in arrows['down']]
@@ -103,7 +113,7 @@ def captureKeyEvent(request):
         elif event == "keyup":
             sense.clear()   #clear the sensehat matrix
             if key == 'w' or key == 'ArrowUp':
-                pass
+                pcaClear()
                 #Rpi.gpio_control.set_pin_state(Rpi.gpio_control.uppin, GPIO.LOW)  # Turn off the GPIO pin
             elif key == 's' or key == 'ArrowDown':
                 pass
