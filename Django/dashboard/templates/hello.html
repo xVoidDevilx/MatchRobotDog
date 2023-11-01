@@ -57,7 +57,7 @@
 
             $(document).keydown(function (e) {
                 // Check if the pressed key is in the allowedKeys array
-                if (allowedKeys.includes(e.key)) {
+                if (allowedKeys.includes(e.key) && !keysPressed[e.key]) {
                     // Record key press event
                     keysPressed[e.key] = true;
 

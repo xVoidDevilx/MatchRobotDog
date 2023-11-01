@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+<body>
+    <div class="grid-container">
+        <div class="sensorDataBox" id="sensorData">
+            <!-- Content for sensor data -->
+        </div>
+        <div class="vid-stream">
+            <img id="lidar" src="{{ url_for('static', filename='lidar.png') }}">            
+        </div>
+        <div class="userImage">
+            {% if user_name %}
+                <img id="pfp" src="{{ url_for('static', filename='pfp.jpeg') }}">
+                <p>Welcome, {{ user_name }}</p>
+            {% else %}
+                <img id="pfp" src="{{ url_for('static', filename='guest.jpeg') }}">
+                <p>Greetings, guest</p>
+            {% endif %}
+        </div>
+        <div class="userLoggedIn">
+            <!-- Content for "User logged in" -->
+        </div>
+        <div class="bot-image">
+            <img id="robodog" src="{{ url_for('static', filename='robodog.png') }}">
+        </div>
+        <div class="pressedKeysBox" id="pressedKeys">
+            <div></div>
+            <img id="up-arr" src="{{ url_for('static', filename='uparrow.png') }}">            
+            <div></div>
+            <img id="left-arr" src="{{ url_for('static', filename='leftarrow.png') }}">
+            <img id="down-arr" src="{{ url_for('static', filename='downarrow.png') }}">
+            <img id="right-arr" src="{{ url_for('static', filename='rightarrow.png') }}">
+             
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let keysPressed = {};
+        let isKeyHeld = false; // Flag to check if any allowed key is currently pressed
+
+        // Define an array of key codes for the keys you want to capture
+        const allowedKeys = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+
+        // Define a function to update the displayed keys
+        function updatePressedKeys() {
+            let pressedKeysDiv = $('#pressedKeys');
+            pressedKeysDiv.empty();
+
+            // Iterate through the keysPressed object and display pressed keys
+            for (let key in keysPressed) {
+                if (keysPressed[key]) {
+                    pressedKeysDiv.append('<p>Key Pressed: ' + key + '</p>');
+                }
+            }
+        }
+
+        // Function to send key data to the server
+        function sendKeyData(url, key, event) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    key: key,
+                    event: event,
+                },
+                success: function (data) {
+                    // Handle the success response
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                },
+            });
+        }
+        // Function to fetch and display sensor data
+        function fetchSensorData() {
+            $.ajax({
+                type: 'GET',
+                url: '/sensor_data',
+                success: function (data) {
+                    // Update the sensorData div with the fetched data
+                    let sensorDataDiv = $('#sensorData');
+                    sensorDataDiv.empty();
+                    
+                    // Display sensor data readings
+                    sensorDataDiv.append('<p>Temperature: ' + data.temperature.toFixed(2) + ' °C</p>');
+                    sensorDataDiv.append('<p>Humidity: ' + data.humidity.toFixed(2) + ' %</p>');
+                    sensorDataDiv.append('<p>Pressure: ' + data.pressure.toFixed(2) + ' mbar</p>');
+                    // Display accelerometer readings
+                    sensorDataDiv.append('<p>Accelerometer X: ' + data.accelerometer.x.toFixed(2) + ' Gs</p>');
+                    sensorDataDiv.append('<p>Accelerometer Y: ' + data.accelerometer.y.toFixed(2) + ' Gs</p>');
+                    sensorDataDiv.append('<p>Accelerometer Z: ' + data.accelerometer.z.toFixed(2) + ' Gs</p>');
+                    
+                    // Display gyroscope readings
+                    sensorDataDiv.append('<p>Gyroscope X: ' + data.gyroscope.x.toFixed(2) + ' rad/s</p>');
+                    sensorDataDiv.append('<p>Gyroscope Y: ' + data.gyroscope.y.toFixed(2) + ' rad/s</p>');
+                    sensorDataDiv.append('<p>Gyroscope Z: ' + data.gyroscope.z.toFixed(2) + ' rad/s</p>');
+                    
+                    // Display magnetometer readings
+                    sensorDataDiv.append('<p>Magnetometer X: ' + data.magnetometer.x.toFixed(2) + ' µT</p>');
+                    sensorDataDiv.append('<p>Magnetometer Y: ' + data.magnetometer.y.toFixed(2) + ' µT</p>');
+                    sensorDataDiv.append('<p>Magnetometer Z: ' + data.magnetometer.z.toFixed(2) + ' µT</p>');
+                    
+                    // Schedule the next fetch in 5 seconds
+                    setTimeout(fetchSensorData, 5000);
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.error("Error fetching sensor data");
+                },
+            });
+        }
+        // Start the periodic sensor data fetching
+        fetchSensorData();
+        
+        $(document).keydown(function (e) {
+            // Check if the pressed key is in the allowedKeys array
+            if (allowedKeys.includes(e.key) && !keysPressed[e.key]) {
+                // Check if any other allowed key is currently pressed
+                if (isKeyHeld) {
+                    return; // Another allowed key is already pressed, do nothing
+                }
+
+                // Record key press event
+                keysPressed[e.key] = true;
+                isKeyHeld = true; // Set the flag to true when an allowed key is held
+
+                // Log the pressed key to the console
+                console.log('Key Pressed:', e.key);
+
+                // Update the displayed keys
+                updatePressedKeys();
+
+                // Send data to the server
+                const url = '/key_event'; // URL for the key event route
+                sendKeyData(url, e.key, 'keydown');
+            }
+        });
+
+        $(document).keyup(function (e) {
+            // Check if the released key is in the allowedKeys array
+            if (allowedKeys.includes(e.key)) {
+                // Record key release event
+                keysPressed[e.key] = false;
+
+                // Check if any other allowed key is currently pressed
+                for (let key in keysPressed) {
+                    if (allowedKeys.includes(key) && keysPressed[key]) {
+                        return; // Another allowed key is still held, do not send key release
+                    }
+                }
+
+                isKeyHeld = false; // Reset the flag when no allowed key is held
+
+                // Log the released key to the console
+                console.log('Key Released:', e.key);
+
+                // Update the displayed keys
+                updatePressedKeys();
+
+                // Send data to the server
+                const url = '/key_event'; // URL for the key event route
+                sendKeyData(url, e.key, 'keyup');
+            }
+        });
+    });
+</script>
+</html>

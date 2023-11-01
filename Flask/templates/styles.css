@@ -1,0 +1,82 @@
+body {
+    background-color: rgba(0, 0, 0, 0.7); /* Transparent black background */
+    color: white; /* Text color */
+    margin: 0; /* Remove default margin to ensure full-width body */
+    overflow: visible;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: 100vh; /* Set the grid container to full viewport height */
+    padding: 10px; /* Add padding to the grid container */
+}
+
+.sensorDataBox, .pressedKeysBox, .vid-stream, .userImage,
+.userLoggedIn, .bot-image {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black box */
+    padding: 10px;
+    border-radius: 1rem;
+    margin: 0.5rem;
+    /* Margin adjusted for grid layout */
+}
+
+.sensorDataBox {
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+}
+
+.pressedKeysBox {
+    grid-column: 3 / span 1;
+    grid-row: 2 / span 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    margin: 0;
+}
+
+#sensorData, #pressedKeys {
+    padding: 5px;
+}
+
+#up-arr, #left-arr, #right-arr, #down-arr,
+#robodog, #lidar{
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: 100%;
+    display: block;
+    margin: 0 auto; /* Center the image horizontally */
+    object-fit: contain; /* Maintain aspect ratio and fill the space */
+    border-radius: 30%;
+}
+#up-arr, #left-arr, #right-arr, #down-arr {
+    border-radius: 0;
+}
+.userImage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.userImage p {
+    font-size:x-large;
+    font-weight: bolder;
+}
+
+#pfp {
+    max-width: 50%;
+    max-height: 50%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sensorDataBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
