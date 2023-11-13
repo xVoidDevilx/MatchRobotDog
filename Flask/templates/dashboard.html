@@ -15,9 +15,11 @@
             {% if user_name != 'Guest'%}
                 <img id="pfp" src="{{ url_for('static', filename='images/pfp.jpeg') }}">
                 <p>Greetings, {{ user_name }}</p>
+                <a href="/logout">Logout</a>
             {% else %}
                 <img id="pfp" src="{{ url_for('static', filename='images/guest.jpeg') }}">
                 <p>Greetings, Guest</p>
+                <a href="/login">Login</a>
             {% endif %}
         </div>
         <div class="userLoggedIn">

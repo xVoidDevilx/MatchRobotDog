@@ -92,6 +92,13 @@ def login():
     else:
         return redirect(url_for('dashboard'))
 
+# logout route handler
+@app.route('/logout', methods = ['GET'])
+def logout():
+    session.pop('logged_in', None)
+    session.pop('username', None)
+    return redirect(url_for('home'))
+
 # Key Logging event handler
 @app.route('/key_event', methods=['POST'])
 def capture_key_event():
