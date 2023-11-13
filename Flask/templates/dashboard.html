@@ -9,35 +9,48 @@
             <!-- Content for sensor data -->
         </div>
         <div class="vid-stream">
-            <img id="lidar" src="{{ url_for('static', filename='lidar.png') }}">            
+            <img id="video_feed" src="{{ url_for('video_feed') }}">            
         </div>
         <div class="userImage">
-            {% if user_name %}
-                <img id="pfp" src="{{ url_for('static', filename='pfp.jpeg') }}">
-                <p>Welcome, {{ user_name }}</p>
+            {% if user_name != 'Guest'%}
+                <img id="pfp" src="{{ url_for('static', filename='images/pfp.jpeg') }}">
+                <p>Greetings, {{ user_name }}</p>
             {% else %}
-                <img id="pfp" src="{{ url_for('static', filename='guest.jpeg') }}">
-                <p>Greetings, guest</p>
+                <img id="pfp" src="{{ url_for('static', filename='images/guest.jpeg') }}">
+                <p>Greetings, Guest</p>
             {% endif %}
         </div>
         <div class="userLoggedIn">
             <!-- Content for "User logged in" -->
         </div>
         <div class="bot-image">
-            <img id="robodog" src="{{ url_for('static', filename='robodog.png') }}">
+            <img id="robodog" src="{{ url_for('static', filename='images/robodog.png') }}">
         </div>
         <div class="pressedKeysBox" id="pressedKeys">
             <div></div>
-            <img id="up-arr" src="{{ url_for('static', filename='uparrow.png') }}">            
+            <img id="up-arr" src="{{ url_for('static', filename='images/uparrow.png') }}">            
             <div></div>
-            <img id="left-arr" src="{{ url_for('static', filename='leftarrow.png') }}">
-            <img id="down-arr" src="{{ url_for('static', filename='downarrow.png') }}">
-            <img id="right-arr" src="{{ url_for('static', filename='rightarrow.png') }}">
+            <img id="left-arr" src="{{ url_for('static', filename='images/leftarrow.png') }}">
+            <img id="down-arr" src="{{ url_for('static', filename='images/downarrow.png') }}">
+            <img id="right-arr" src="{{ url_for('static', filename='images/rightarrow.png') }}">
              
         </div>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Handle the case if the webcam feed is not available
+    const videoFeed = document.getElementById('video-feed');
+    const videoContainer = document.getElementById('video-container');
+
+    videoFeed.addEventListener('error', function () {
+        // Hide the video container and show an error message
+        videoContainer.style.display = 'none';
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = 'Webcam feed is not available';
+        document.body.appendChild(errorMessage);
+    });
+</script>
 <script>
     $(document).ready(function () {
         let keysPressed = {};
