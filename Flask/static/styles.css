@@ -15,7 +15,7 @@ body {
 }
 
 .sensorDataBox, .pressedKeysBox, .vid-stream, .userImage,
-.userLoggedIn, .bot-image {
+.lidar-container, .bot-image {
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black box */
     padding: 10px;
     border-radius: 1rem;

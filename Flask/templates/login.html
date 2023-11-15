@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Login</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha256.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
-        form {
+
+        #loginBox {
             margin: 0 auto;
             width: 300px;
             padding: 20px;
@@ -14,10 +18,12 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
         }
+
         input[type="text"],
         input[type="password"] {
             width: 100%;
@@ -26,7 +32,8 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        input[type="submit"] {
+
+        #loginButton {
             width: 100%;
             padding: 10px;
             border: none;
@@ -35,13 +42,15 @@
             color: white;
             cursor: pointer;
         }
-        input[type="submit"]:hover {
+
+        #loginButton:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
+
 <body>
-    <form action="/login" method="post">
+    <div id="loginBox">
         <h2>Login</h2>
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required>
@@ -49,7 +58,42 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required>
 
-        <input type="submit" value="Login">
-    </form>
+        <button id="loginButton">Login</button>
+    </div>
+
+    <script>
+        document.getElementById('loginButton').addEventListener('click', function () {
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+    
+            // Perform hashing using CryptoJS
+            let hashedPassword = CryptoJS.SHA256(password).toString();
+    
+            // Use AJAX to send the data to the server
+            $.ajax({
+                type: 'POST',
+                url: '/login', // Replace with your server endpoint
+                data: {
+                    username: username,
+                    password: hashedPassword
+                },
+                success: function (data) {
+                // Handle the success response
+                console.log(data);
+                // Check if the response indicates a successful login
+                if (data.success) {
+                    // Redirect to the dashboard
+                    window.location.href = '/dashboard';
+                } else {
+                    // Handle other scenarios if needed
+                    console.error("Login failed! Logging in as guest...");
+                    // Redirect to the dashboard
+                    window.location.href = '/dashboard';
+                }
+                }
+            })
+        });
+    </script>
 </body>
+
 </html>

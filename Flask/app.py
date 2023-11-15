@@ -2,7 +2,6 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, Response
 from arrows import colors, arrows
 import os
-import hashlib
 import cv2
 
 # Test for RPI library connections
@@ -76,21 +75,19 @@ def dashboard():
 # Admin Login URL handler
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # request to the page in order to submit the login info
-    if request.method == 'GET':
+    if request.method == "GET":
         return render_template('login.html')
-
+    
     entered_username = request.form.get('username')
     entered_password = request.form.get('password')
 
-    hashed_passkey = hashlib.sha256(entered_password.encode()).hexdigest()
-
-    if entered_username == username and hashed_passkey == hashpass:
+    if entered_username == username and entered_password == hashpass:
         session['logged_in'] = True
         session['username'] = username
-        return redirect(url_for('dashboard'))
+        return jsonify({'success': True})
     else:
-        return redirect(url_for('dashboard'))
+        return jsonify({'success': False})
+
 
 # logout route handler
 @app.route('/logout', methods = ['GET'])
