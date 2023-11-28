@@ -9,9 +9,9 @@ body {
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    height: 100vh; /* Set the grid container to full viewport height */
-    padding: 10px; /* Add padding to the grid container */
+    grid-template-rows: 1fr 1fr; /* Allocate 50% height to each row */
+    height: 100vh;
+    padding: 10px;
 }
 
 .sensorDataBox, .pressedKeysBox, .vid-stream, .userImage,
@@ -20,12 +20,14 @@ body {
     padding: 10px;
     border-radius: 1rem;
     margin: 0.5rem;
-    /* Margin adjusted for grid layout */
 }
 
-.sensorDataBox {
-    grid-column: 1 / span 1;
-    grid-row: 1 / span 1;
+.vid-stream {
+    grid-column: 2 / span 1;
+    grid-row: 1 / span 1; /* Update grid row to be the first row */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pressedKeysBox {
@@ -34,14 +36,9 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    margin: 0;
 }
 
-#sensorData, #pressedKeys {
-    padding: 5px;
-}
-
-#up-arr, #left-arr, #right-arr, #down-arr,
+#ArrowUp, #ArrowLeft, #ArrowDown, #ArrowRight,
 #robodog, #lidar{
     max-height: 100%;
     max-width: 100%;
@@ -52,9 +49,7 @@ body {
     object-fit: contain; /* Maintain aspect ratio and fill the space */
     border-radius: 30%;
 }
-#up-arr, #left-arr, #right-arr, #down-arr {
-    border-radius: 0;
-}
+
 .userImage {
     display: flex;
     flex-direction: column;
@@ -74,25 +69,40 @@ body {
     object-fit: cover;
 }
 
+/* Update the sensorDataBox styles for a 3-column grid layout */
 .sensorDataBox {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+    display: grid;
+    align-content: space-around;
+    grid-template-columns: repeat(3, 1fr); /* Three columns */
+    grid-template-rows: auto; /* Automatically adjust row height */
+    gap: 5px; /* Reduce the gap between rows */
+}
+
+/* Add this style to make the sensor data paragraphs evenly spaced */
+#sensorData p {
+    margin: 0;
+    margin-top: 1rem;
+    text-align: center; /* Center the text in each column */
+    font-size: large; /* Adjust font size to make the text fit better */
 }
 
 #video_feed {
+    max-height: 50vh; /* Set max height to be 50% of the viewport height */
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
+    object-fit: cover;
     border-radius: 10%;
 }
 
-.arrow {
-    transition: opacity 0.3s ease;
+.held {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Box shadow for effect, adjust values as needed */
+    opacity: 0.8; /* Adjust opacity as needed */
+    transition: opacity 0.3s ease, box-shadow 0.3s ease; /* Transition both opacity and box-shadow */
 }
 
-.pressed {
-    opacity: 0.5;
+/* Add these styles to transition the changes smoothly */
+#ArrowUp, #ArrowLeft, #ArrowDown, #ArrowRight {
+    transition: opacity 0.3s ease, box-shadow 0.3s ease; /* Transition both opacity and box-shadow */
+    border-radius: 0;
 }

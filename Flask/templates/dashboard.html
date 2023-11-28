@@ -30,12 +30,11 @@
         </div>
         <div class="pressedKeysBox" id="pressedKeys">
             <div></div>
-            <img id="up-arr" src="{{ url_for('static', filename='images/uparrow.png') }}">            
+            <a href="#" id="up-link"><img id="ArrowUp" src="{{ url_for('static', filename='images/uparrow.png') }}"></a>
             <div></div>
-            <img id="left-arr" src="{{ url_for('static', filename='images/leftarrow.png') }}">
-            <img id="down-arr" src="{{ url_for('static', filename='images/downarrow.png') }}">
-            <img id="right-arr" src="{{ url_for('static', filename='images/rightarrow.png') }}">
-             
+            <a href="#" id="left-link"><img id="ArrowLeft" src="{{ url_for('static', filename='images/leftarrow.png') }}"></a>
+            <a href="#" id="down-link"><img id="ArrowDown" src="{{ url_for('static', filename='images/downarrow.png') }}"></a>
+            <a href="#" id="right-link"><img id="ArrowRight" src="{{ url_for('static', filename='images/rightarrow.png') }}"></a>
         </div>
     </div>
 </body>
@@ -59,20 +58,38 @@
         let isKeyHeld = false; // Flag to check if any allowed key is currently pressed
 
         // Define an array of key codes for the keys you want to capture
-        const allowedKeys = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+        const allowedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
-        // Define a function to update the displayed keys
-        function updatePressedKeys() {
-            let pressedKeysDiv = $('#pressedKeys');
-            pressedKeysDiv.empty();
-
-            // Iterate through the keysPressed object and display pressed keys
-            for (let key in keysPressed) {
-                if (keysPressed[key]) {
-                    pressedKeysDiv.append('<p>Key Pressed: ' + key + '</p>');
-                }
-            }
+        // Add click event listeners to arrow key links
+        $('#up-link, #left-link, #down-link, #right-link').click(function (e) {
+            e.preventDefault(); // Prevent the default behavior (scrolling up)
+            let key;
+            switch (e.target.id) {
+                case 'up-arr':
+                    key = 'ArrowUp';
+                    break;
+                case 'left-arr':
+                    key = 'ArrowLeft';
+                    break;
+                case 'down-arr':
+                    key = 'ArrowDown';
+                    break;
+                case 'right-arr':
+                    key = 'ArrowRight';
+                    break;
+                default:
+                    console.error('Invalid key:', e.target.id);
+                    return;
         }
+
+        const url = '/key_event'; // URL for the key event route
+        const eventType = 'keydown'; // For simplicity, assuming a click simulates a keydown event
+
+        console.log('Key Pressed:', key)
+
+        // Send data to the server
+        sendKeyData(url, key, eventType);
+    });
 
         // Function to send key data to the server
         function sendKeyData(url, key, event) {
@@ -91,37 +108,36 @@
                 },
             });
         }
+        
         // Function to fetch and display sensor data
         function fetchSensorData() {
             $.ajax({
                 type: 'GET',
                 url: '/sensor_data',
                 success: function (data) {
-                    // Update the sensorData div with the fetched data
-                    let sensorDataDiv = $('#sensorData');
-                    sensorDataDiv.empty();
-                    
-                    // Display sensor data readings
-                    sensorDataDiv.append('<p>Temperature: ' + data.temperature.toFixed(2) + ' °C</p>');
-                    sensorDataDiv.append('<p>Humidity: ' + data.humidity.toFixed(2) + ' %</p>');
-                    sensorDataDiv.append('<p>Pressure: ' + data.pressure.toFixed(2) + ' mbar</p>');
-                    // Display accelerometer readings
-                    sensorDataDiv.append('<p>Accelerometer X: ' + data.accelerometer.x.toFixed(2) + ' Gs</p>');
-                    sensorDataDiv.append('<p>Accelerometer Y: ' + data.accelerometer.y.toFixed(2) + ' Gs</p>');
-                    sensorDataDiv.append('<p>Accelerometer Z: ' + data.accelerometer.z.toFixed(2) + ' Gs</p>');
-                    
-                    // Display gyroscope readings
-                    sensorDataDiv.append('<p>Gyroscope X: ' + data.gyroscope.x.toFixed(2) + ' rad/s</p>');
-                    sensorDataDiv.append('<p>Gyroscope Y: ' + data.gyroscope.y.toFixed(2) + ' rad/s</p>');
-                    sensorDataDiv.append('<p>Gyroscope Z: ' + data.gyroscope.z.toFixed(2) + ' rad/s</p>');
-                    
-                    // Display magnetometer readings
-                    sensorDataDiv.append('<p>Magnetometer X: ' + data.magnetometer.x.toFixed(2) + ' µT</p>');
-                    sensorDataDiv.append('<p>Magnetometer Y: ' + data.magnetometer.y.toFixed(2) + ' µT</p>');
-                    sensorDataDiv.append('<p>Magnetometer Z: ' + data.magnetometer.z.toFixed(2) + ' µT</p>');
-                    
-                    // Schedule the next fetch in 5 seconds
-                    setTimeout(fetchSensorData, 5000);
+                // Update the sensorData div with the fetched data
+                let sensorDataDiv = $('#sensorData');
+                sensorDataDiv.empty();
+
+                // Display sensor data readings with a newline between key and data
+                sensorDataDiv.append('<p>Temperature: <br>' + data.temperature.toFixed(2) + ' °C</p>');
+                sensorDataDiv.append('<p>Humidity: <br>' + data.humidity.toFixed(2) + ' %</p>');
+                sensorDataDiv.append('<p>Pressure: <br>' + data.pressure.toFixed(2) + ' mbar</p>');
+                // Display accelerometer readings
+                sensorDataDiv.append('<p>Accelerometer X: <br>' + data.accelerometer.x.toFixed(2) + ' Gs</p>');
+                sensorDataDiv.append('<p>Accelerometer Y: <br>' + data.accelerometer.y.toFixed(2) + ' Gs</p>');
+                sensorDataDiv.append('<p>Accelerometer Z: <br>' + data.accelerometer.z.toFixed(2) + ' Gs</p>');
+                // Display gyroscope readings
+                sensorDataDiv.append('<p>Gyroscope X: <br>' + data.gyroscope.x.toFixed(2) + ' rad/s</p>');
+                sensorDataDiv.append('<p>Gyroscope Y: <br>' + data.gyroscope.y.toFixed(2) + ' rad/s</p>');
+                sensorDataDiv.append('<p>Gyroscope Z: <br>' + data.gyroscope.z.toFixed(2) + ' rad/s</p>');
+                // Display magnetometer readings
+                sensorDataDiv.append('<p>Magnetometer X: <br>' + data.magnetometer.x.toFixed(2) + ' µT</p>');
+                sensorDataDiv.append('<p>Magnetometer Y: <br>' + data.magnetometer.y.toFixed(2) + ' µT</p>');
+                sensorDataDiv.append('<p>Magnetometer Z: <br>' + data.magnetometer.z.toFixed(2) + ' µT</p>');
+
+                // Schedule the next fetch in 5 seconds
+                setTimeout(fetchSensorData, 5000);
                 },
                 error: function (xhr, status, error) {
                     // Handle the error response
@@ -129,38 +145,46 @@
                 },
             });
         }
+
         // Start the periodic sensor data fetching
         fetchSensorData();
         
         $(document).keydown(function (e) {
+            // Prevent default scrolling behavior
+            e.preventDefault();
+
+            const mappedKey = mapWASDToArrows(e.key); // Map WASD to Arrow keys
+
             // Check if the pressed key is in the allowedKeys array
-            if (allowedKeys.includes(e.key) && !keysPressed[e.key]) {
+            if (allowedKeys.includes(mappedKey) && !keysPressed[mappedKey]) {
                 // Check if any other allowed key is currently pressed
                 if (isKeyHeld) {
                     return; // Another allowed key is already pressed, do nothing
                 }
 
                 // Record key press event
-                keysPressed[e.key] = true;
+                keysPressed[mappedKey] = true;
                 isKeyHeld = true; // Set the flag to true when an allowed key is held
 
-                // Log the pressed key to the console
-                console.log('Key Pressed:', e.key);
+                // Add the "held" class
+                document.getElementById(`${mappedKey}`).classList.add('held');
 
-                // Update the displayed keys
-                updatePressedKeys();
+                // Log the pressed key to the console
+                console.log('Key Pressed:', mappedKey);
 
                 // Send data to the server
                 const url = '/key_event'; // URL for the key event route
-                sendKeyData(url, e.key, 'keydown');
+                sendKeyData(url, mappedKey, 'keydown');
             }
         });
 
         $(document).keyup(function (e) {
+            const mappedKey = mapWASDToArrows(e.key); // Map WASD to Arrow keys
+
             // Check if the released key is in the allowedKeys array
-            if (allowedKeys.includes(e.key)) {
+            if (allowedKeys.includes(mappedKey)) {
                 // Record key release event
-                keysPressed[e.key] = false;
+                keysPressed[mappedKey] = false;
 
                 // Check if any other allowed key is currently pressed
                 for (let key in keysPressed) {
@@ -171,17 +195,33 @@
 
                 isKeyHeld = false; // Reset the flag when no allowed key is held
 
-                // Log the released key to the console
-                console.log('Key Released:', e.key);
+                // Remove the "held" class
+                document.getElementById(`${mappedKey}`).classList.remove('held');
 
-                // Update the displayed keys
-                updatePressedKeys();
+                // Log the released key to the console
+                console.log('Key Released:', mappedKey);
 
                 // Send data to the server
                 const url = '/key_event'; // URL for the key event route
-                sendKeyData(url, e.key, 'keyup');
+                sendKeyData(url, mappedKey, 'keyup');
             }
         });
+
+        // Function to map WASD to Arrow keys
+        function mapWASDToArrows(key) {
+            switch (key.toLowerCase()) {
+                case 'w':
+                    return 'ArrowUp';
+                case 'a':
+                    return 'ArrowLeft';
+                case 's':
+                    return 'ArrowDown';
+                case 'd':
+                    return 'ArrowRight';
+                default:
+                    return key;
+            }
+        }
     });
 </script>
 </html>

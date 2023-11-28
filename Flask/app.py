@@ -109,23 +109,25 @@ def capture_key_event():
 
     # Handle the key event here, similar to your existing code
     if event == "keydown":
-        if key == 'w' or key == 'ArrowUp':
+        if key == 'ArrowUp':
             print(f"{colors['red']}\n {arrows['up']}")
-        elif key == 's' or key == 'ArrowDown':
+        elif key == 'ArrowDown':
             print(f"{colors['black']}\n {arrows['down']}")
-        elif key == 'a' or key == 'ArrowLeft':
+        elif key == 'ArrowLeft':
             print(f"{colors['white']}\n {arrows['left']}")
-        elif key == 'd' or key == 'ArrowRight':
+        elif key == 'ArrowRight':
             print(f"{colors['red']}\n {arrows['right']}")
+    
     elif event == "keyup":
-        if key == 'w' or key == 'ArrowUp':
+        if key == 'ArrowUp':
             print(f"{colors['white']}\n {arrows['down']}")
-        elif key == 's' or key == 'ArrowDown':
+        elif key == 'ArrowDown':
             print(f"{colors['black']}\n {arrows['down']}")
-        elif key == 'a' or key == 'ArrowLeft':
+        elif key == 'ArrowLeft':
             print(f"{colors['white']}\n {arrows['down']}")
-        elif key == 'd' or key == 'ArrowRight':
+        elif key == 'ArrowRight':
             print(f"{colors['black']}\n {arrows['down']}")
+    
     return jsonify({'message': 'Key event captured', 'key': key, 'event': event})
 
 # Grab sensor data url handle
